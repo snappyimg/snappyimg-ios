@@ -88,7 +88,7 @@ class SnappyImage {
     }
     
     private func getHashedURLString(urlString: String) -> String {
-        return SnappyCustomBase64(input: urlString.data(using: String.Encoding.utf8)!)
+        return snappyCustomBase64(input: urlString.data(using: String.Encoding.utf8)!)
     }
 }
 
@@ -101,7 +101,7 @@ extension Data {
         var result = [CUnsignedChar](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA256), cKey, key.count, cData, self.count, &result)
         let hmacData: NSData = NSData(bytes: result, length: (Int(CC_SHA256_DIGEST_LENGTH)))
-        return SnappyCustomBase64(input: hmacData as Data)
+        return snappyCustomBase64(input: hmacData as Data)
     }
 }
 
@@ -127,7 +127,7 @@ extension String {
     }
 }
 
-func SnappyCustomBase64(input: Data) -> String {
+func snappyCustomBase64(input: Data) -> String {
     return input.base64EncodedString()
         .replacingOccurrences(of: "+", with: "-")
         .replacingOccurrences(of: "/", with: "_")
