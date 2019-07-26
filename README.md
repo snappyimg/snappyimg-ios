@@ -22,7 +22,7 @@ pod 'SnappyImg'
 
 ## Author
 
-vytick, vytick@gmail.com
+Martin vytick Vytrhlík, dev@mangoweb.cz
 
 ## License
 
