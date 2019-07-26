@@ -13,10 +13,10 @@ Scale, crop and optimize images on-the-fly, with all the benefits of a CDN. This
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Martin vytick Vytrhlik' => 'dev@mangoweb.cz' }
   s.source           = { :git => 'https://github.com/snappyimg/snappyimg-ios.git', :tag => s.version.to_s }
-  s.social_media_url = 'https://twitter.com/vytick'
+#  s.social_media_url = 'https://twitter.com/vytick'
   s.ios.deployment_target = '10.3.1'
   s.swift_version = '4.2'
 
-  s.source_files = 'SnappyImg/Classes/**/*'
+  s.source_files = './SnappyImg/Classes/**/*'
   s.dependency 'CryptoSwift'
 end
