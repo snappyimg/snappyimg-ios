@@ -17,6 +17,6 @@ Scale, crop and optimize images on-the-fly, with all the benefits of a CDN. This
   s.ios.deployment_target = '10.3.1'
   s.swift_version = '4.2'
 
-  s.source_files = './SnappyImg/Classes/**/*'
+  s.source_files = 'SnappyImg/Classes/**/*'
   s.dependency 'CryptoSwift'
 end
