@@ -1,0 +1,6 @@
+framework module SnappyImg {
+  umbrella header "SnappyImg-umbrella.h"
+
+  export *
+  module * { export * }
+}

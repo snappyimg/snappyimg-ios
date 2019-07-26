@@ -1,0 +1,23 @@
+PODS:
+  - CryptoSwift (1.0.0)
+  - SnappyImg (0.1.0):
+    - CryptoSwift
+
+DEPENDENCIES:
+  - SnappyImg (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - CryptoSwift
+
+EXTERNAL SOURCES:
+  SnappyImg:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  SnappyImg: 2c6826b7f08896bf8ab310909db3854550fd4394
+
+PODFILE CHECKSUM: 23c5dc54599f8d79817d9166cfdb147563eaf29e
+
+COCOAPODS: 1.7.4
