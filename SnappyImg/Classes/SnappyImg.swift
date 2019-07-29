@@ -1,5 +1,5 @@
 //
-//  SnappyImage.swift
+//  SnappyImg.swift
 //
 //  Created by Martin Vytrhlík.
 //  Copyright © 2019 mangoweb s.r.o. All rights reserved.
@@ -8,7 +8,8 @@
 import Foundation
 import CryptoSwift
 
-class SnappyImage {
+
+open class SnappyImg {
     
     
     //  options are created with some default values:
@@ -18,13 +19,13 @@ class SnappyImage {
     //    resizeType = .fit
     //    gravity = .smart
     
-    class Options {
+    open class Options {
         
-        enum ResizeType: String {
+        public enum ResizeType: String {
             case fit, fill, crop
         }
         
-        enum Gravity: String {
+        public enum Gravity: String {
             case north = "no", south = "so", east = "ea", west = "we", center = "ce", smart = "sm"
         }
         
@@ -43,7 +44,7 @@ class SnappyImage {
         }
     }
     
-    enum ExtensionType: String {
+    public enum ExtensionType: String {
         case jpg, png, webp
     }
     
@@ -54,7 +55,7 @@ class SnappyImage {
     //  Change this to change default options or use func encode(urlString: String, resizeType: Options.ResizeType, width: Int, height: Int, gravity: Options.Gravity, shouldEnlarge: Bool, extensionType: ExtensionType) -> String? to set options for one request only
     var baseOptions: Options = Options()
     
-    init(baseUrlString: String, key: String, salt: String, options: Options? = nil) {
+    public init(baseUrlString: String, key: String, salt: String, options: Options? = nil) {
         self.baseUrlString = baseUrlString
         self.key = key
         self.salt = salt
@@ -63,7 +64,7 @@ class SnappyImage {
         }
     }
     
-    func encode(urlString: String, resizeType: Options.ResizeType, width: Int, height: Int, gravity: Options.Gravity, shouldEnlarge: Bool, extensionType: ExtensionType) -> String? {
+    open func encode(urlString: String, resizeType: Options.ResizeType, width: Int, height: Int, gravity: Options.Gravity, shouldEnlarge: Bool, extensionType: ExtensionType) -> String? {
         let o = Options()
         o.resizeType = resizeType
         o.width = width
@@ -74,14 +75,14 @@ class SnappyImage {
         return encode(urlString: urlString, extensionType: extensionType, options: o)
     }
     
-    func encode(url: URL, extensionType: ExtensionType, options: Options? = nil) -> URL? {
+    open func encode(url: URL, extensionType: ExtensionType, options: Options? = nil) -> URL? {
         guard let encoded = encode(urlString: url.absoluteString, extensionType: extensionType, options: options) else {
-             return nil
+            return nil
         }
         return URL(string: encoded)
     }
     
-    func encode(urlString: String, extensionType: ExtensionType, options: Options? = nil) -> String? {
+    open func encode(urlString: String, extensionType: ExtensionType, options: Options? = nil) -> String? {
         
         let path = "/\((options ?? baseOptions).toPathString)/\(getHashedURLString(urlString: urlString)).\(extensionType.rawValue)"
         
@@ -92,7 +93,7 @@ class SnappyImage {
         let hmac: HMAC = HMAC(key: keyHex.bytes, variant: .sha256)
         do {
             let bytes = try hmac.authenticate(toSign.bytes)
-            let signature = snappyCustomBase64(input: Data(bytes: bytes))
+            let signature = Data(bytes: bytes).snappyCustomBase64
             return baseUrlString + "/" + signature + path
         } catch {
             NSLog(error.localizedDescription)
@@ -101,7 +102,7 @@ class SnappyImage {
     }
     
     private func getHashedURLString(urlString: String) -> String {
-        return snappyCustomBase64(input: urlString.data(using: String.Encoding.utf8)!)
+        return urlString.data(using: String.Encoding.utf8)!.snappyCustomBase64
     }
 }
 
@@ -127,9 +128,12 @@ extension String {
     }
 }
 
-func snappyCustomBase64(input: Data) -> String {
-    return input.base64EncodedString()
-        .replacingOccurrences(of: "+", with: "-")
-        .replacingOccurrences(of: "/", with: "_")
-        .replacingOccurrences(of: "=+$", with: "", options: .regularExpression)
+extension Data {
+    var snappyCustomBase64: String {
+        return self.base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=+$", with: "", options: .regularExpression)
+    }
 }
+
