@@ -42,23 +42,44 @@ open class SnappyImg {
         var toPathString: String {
             return "\(resizeType.rawValue)/\(width)/\(height)/\(gravity.rawValue)/\(shouldEnlarge ? 1 : 0)"
         }
+        
+        public init() {
+            
+        }
+        
+        convenience public init(width: Int, height: Int, resizeType: ResizeType, gravity: Gravity, shouldEnlarge: Bool) {
+            self.init()
+            self.width = width
+            self.height = height
+            self.resizeType = resizeType
+            self.gravity = gravity
+            self.shouldEnlarge = shouldEnlarge
+        }
     }
     
     public enum ExtensionType: String {
         case jpg, png, webp
     }
     
-    private let baseUrlString: String
-    private let key: String
-    private let salt: String
+    public enum StageType: String {
+        case demo
+        case serve
+    }
+    
+    private let stage: StageType
+    private var baseUrlString: String {
+        return "https://\(stage.rawValue).snappyimg.com"
+    }
+    private let appToken: String
+    private let appSecret: String
     
     //  Change this to change default options or use func encode(urlString: String, resizeType: Options.ResizeType, width: Int, height: Int, gravity: Options.Gravity, shouldEnlarge: Bool, extensionType: ExtensionType) -> String? to set options for one request only
     var baseOptions: Options = Options()
     
-    public init(baseUrlString: String, key: String, salt: String, options: Options? = nil) {
-        self.baseUrlString = baseUrlString
-        self.key = key
-        self.salt = salt
+    public init(stage: StageType, appToken: String, appSecret: String, options: Options? = nil) {
+        self.stage = stage
+        self.appToken = appToken
+        self.appSecret = appSecret
         if let options = options {
             self.baseOptions = options
         }
@@ -84,17 +105,16 @@ open class SnappyImg {
     
     open func encode(urlString: String, extensionType: ExtensionType, options: Options? = nil) -> String? {
         
-        let path = "/\((options ?? baseOptions).toPathString)/\(getHashedURLString(urlString: urlString)).\(extensionType.rawValue)"
+        let base64ImageUrl = getHashedURLString(urlString: urlString)
+        let toSign = "\((options ?? baseOptions).toPathString)/\(base64ImageUrl).\(extensionType.rawValue)"
         
-        guard let saltHex = salt.snappyHexadecimal() else { return nil }
-        guard let keyHex = key.snappyHexadecimal() else { return nil }
+        guard let secretHex = appSecret.snappyHexadecimal() else { return nil }
         
-        let toSign = saltHex + path.utf8
-        let hmac: HMAC = HMAC(key: keyHex.bytes, variant: .sha256)
+        let hmac: HMAC = HMAC(key: secretHex.bytes, variant: .sha256)
         do {
             let bytes = try hmac.authenticate(toSign.bytes)
             let signature = Data(bytes: bytes).snappyCustomBase64
-            return baseUrlString + "/" + signature + path
+            return baseUrlString + "/" + appToken + "/" + signature + "/" + toSign
         } catch {
             NSLog(error.localizedDescription)
             return nil
@@ -136,4 +156,6 @@ extension Data {
             .replacingOccurrences(of: "=+$", with: "", options: .regularExpression)
     }
 }
+
+
 
