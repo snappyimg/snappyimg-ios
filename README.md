@@ -5,6 +5,11 @@
 [![License](https://img.shields.io/cocoapods/l/SnappyImg.svg?style=flat)](https://cocoapods.org/pods/SnappyImg)
 [![Platform](https://img.shields.io/cocoapods/p/SnappyImg.svg?style=flat)](https://cocoapods.org/pods/SnappyImg)
 
+Scale, crop and optimize images on-the-fly, with all the benefits of a CDN.
+
+SnappyImg is a swift library from [manGoweb](https://www.mangoweb.cz/) to use with https://www.snappyimg.com
+
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
