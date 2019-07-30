@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SnappyImg'
-  s.version          = '0.4.0'
+  s.version          = '0.5.0'
   s.summary          = 'Scale, crop and optimize images on-the-fly, with all the benefits of a CDN.'
 
   s.description      = <<-DESC
